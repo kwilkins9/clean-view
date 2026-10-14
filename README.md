@@ -36,6 +36,17 @@ Clean View is on as soon as it installs.
 
 Your choice is remembered after a restart. When Clean View is off, everything Claude does is shown again.
 
+## Agent Dock
+
+The plugin also includes **Agent Dock**: pick a Team Size, and every request is split across that many helper agents running at the same time, each shown as a live card.
+
+- `/dock` opens the dock, and typing `/dock` again folds it to a badge in the status bar.
+- `/dock 10` sets the Team Size (any whole number from 1 to 100). You can also pick a size in the dock itself.
+- Sizes above 20 ask you to confirm, and go back to 1 in a new session.
+- "Helper agents: Fast & Cheap" runs helpers on Haiku; "Same as me" uses your model.
+
+Big teams use your plan quickly.
+
 ## Good to know
 
 - Claude plans its steps before it starts any work, so each request makes a few extra small tool calls.

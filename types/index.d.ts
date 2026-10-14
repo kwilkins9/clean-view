@@ -33,12 +33,51 @@ export type CleanViewChecklist = {
   isRunning: boolean
 }
 
+export type DockCardStatus = 'queued' | 'working' | 'done' | 'stuck'
+
+/** One helper agent's card in the Agent Dock. */
+export type DockCard = {
+  /** The tool_use_id of the Agent call that launched it. */
+  id: string
+  /** The helper's agent id, once known. */
+  agentId: string | null
+  name: string
+  status: DockCardStatus
+  percent: number
+  hasReported: boolean
+  startedAt: number | null
+  finishedAt: number | null
+}
+
+export type DockMission = {
+  id: string
+  title: string
+  startedAt: number
+  finishedAt: number | null
+  /** Agent calls the main loop made for this request. */
+  agentCalls: number
+  /** True once the "you used X of N" follow-up was sent. */
+  hasNudged: boolean
+}
+
+export type DockState = {
+  teamSize: number
+  /** A big team waiting for Continue or Cancel. */
+  pendingSize: number | null
+  isCustomOpen: boolean
+  helperModel: 'fast' | 'same'
+  mission: DockMission | null
+  cards: DockCard[]
+}
+
 declare module 'claude-code' {
   interface PluginState {
     'clean-view': {
       cleanViewEnabled: boolean
       checklist: CleanViewChecklist
       tick: number
+      dock: DockState
+      dockTick: number
     }
   }
 }

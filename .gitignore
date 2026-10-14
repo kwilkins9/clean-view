@@ -1,3 +1,7 @@
 # Written by Claude Code each time it loads the mod; not part of the source.
 .claude-plugin/types/
 tsconfig.json
+
+# Personal headshot: kept on this computer only.
+employee-headshots/kwilkins9.png
+employee-headshots-preview.png
