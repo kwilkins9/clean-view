@@ -1,0 +1,15 @@
+{
+  "name": "clean-view",
+  "description": "Clean View: a calm, plain-English checklist view for Claude Code.",
+  "owner": {
+    "name": "hellraysr",
+    "email": "hellraysr@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "clean-view",
+      "source": "./",
+      "description": "A calm, friendly view: hides tool rows and shows one plain-English checklist above the prompt."
+    }
+  ]
+}
