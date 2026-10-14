@@ -36,6 +36,7 @@ import {
   infoLine,
   initials,
   instructionText,
+  isAcknowledgement,
   isFinished,
   isLive,
   layout,
@@ -216,6 +217,7 @@ export function registerDock(on: On): void {
   on('prompt.submit', async ($, e, next) => {
     const kind = e.origin?.kind ?? 'composer'
     if (kind !== 'composer' && kind !== 'bridge' && kind !== 'sdk') return next(e)
+    if (isAcknowledgement(e.text)) return next(e)
     const at = await nowMs($)
     const dock = await read($, dockAtom)
     if (!isLive(dock.cards)) await edit($, d => newMission(d, e.text, at, `m-${at}`))

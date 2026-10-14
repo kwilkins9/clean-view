@@ -7,6 +7,7 @@ import {
   emptyDock,
   faceFor,
   instructionText,
+  isAcknowledgement,
   meterSegments,
   parseSize,
   progressHelper,
@@ -249,5 +250,30 @@ describe('faces', () => {
     expect(await desk.findAll({ type: 'Image' })).toHaveLength(0)
     expect((await desk.findAll({ type: 'Text', text: 'PP' })).length).toBeGreaterThan(0)
     await desk.unmount()
+  })
+})
+
+describe('quiet replies', () => {
+  test('short replies like "ok cool" carry no split instruction', async ($, on) => {
+    expect(isAcknowledgement('ok cool')).toBe(true)
+    expect(isAcknowledgement('Thanks!')).toBe(true)
+    expect(isAcknowledgement('sounds good, thank you')).toBe(true)
+    expect(isAcknowledgement('fix it')).toBe(false)
+    expect(isAcknowledgement('Research bakery pricing')).toBe(false)
+    const w = world(on)
+    await dock($, '4')
+    await ask($, 'ok cool')
+    expect(w.contexts[0]).toEqual([])
+    await ask($, 'Research four bakeries')
+    expect(w.contexts[1]).toEqual([instructionText(4)])
+  })
+
+  test('a request that used no helpers gets no follow-up', async ($, on) => {
+    const w = world(on)
+    await dock($, '4')
+    await ask($, 'What is the capital of France?')
+    await $.turn.complete({ answer: 'Paris', durationMs: 10, isAborted: false, turnId: 't1', reason: 'answer' })
+    await w.clock.settle()
+    expect(w.nudges).toEqual([])
   })
 })

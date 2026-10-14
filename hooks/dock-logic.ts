@@ -118,9 +118,22 @@ export function nudgeText(used: number, size: number): string {
   return `You used ${used} of ${size} helpers. Split the remaining work across the other ${size - used}, one helper per piece, all in parallel.`
 }
 
+/** One follow-up when a request used some helpers but fewer than the Team Size. Zero means there was nothing to split. */
 export function shouldNudge(mission: DockMission | null, size: number, wasAborted: boolean): boolean {
   if (mission === null || size <= 1 || wasAborted) return false
-  return !mission.hasNudged && mission.agentCalls < size
+  return !mission.hasNudged && mission.agentCalls >= 1 && mission.agentCalls < size
+}
+
+const ACK_WORDS = new Set([
+  'ok', 'okay', 'k', 'kk', 'cool', 'nice', 'great', 'thanks', 'thank', 'you', 'thx', 'ty', 'yes', 'yep', 'yeah', 'yup',
+  'no', 'nope', 'sure', 'got', 'it', 'sounds', 'good', 'perfect', 'bingo', 'awesome', 'lol', 'done', 'right', 'alright',
+  'fine', 'neat', 'wow', 'love', 'that', 'this', 'looks', 'all', 'set', 'gotcha', 'understood', 'agreed', 'excellent',
+])
+
+/** A short reply like "ok cool" or "thanks!": nothing in it to split across helpers. */
+export function isAcknowledgement(text: string): boolean {
+  const words = String(text ?? '').toLowerCase().replace(/[^a-z\s']/g, ' ').replace(/'/g, '').split(/\s+/).filter(Boolean)
+  return words.length > 0 && words.length <= 5 && words.every(word => ACK_WORDS.has(word))
 }
 
 export type DockCounts = { working: number; queued: number; done: number; stuck: number; total: number }
